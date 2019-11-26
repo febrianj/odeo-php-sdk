@@ -3,6 +3,7 @@
 namespace OdeoApi;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\ClientException;
 
 class OdeoApi {
 
@@ -68,15 +69,19 @@ class OdeoApi {
       $options['json'] = $body;
     }
     $options['headers'] = $this->createHeaders($method, $path, $token, $body);
-    $response = $this->client->request($method, $path, $options);
 
-    return $response->getBody()->getContents();
+    try {
+      $response = $this->client->request($method, $path, $options);
+      return $response->getBody()->getContents();
+    } catch (ClientException $e) {
+      return $e->getResponse()->getBody()->getContents();
+    }
   }
 
   protected function generateSignature($method, $path, $accessToken, $timestamp, $body) {
     if (empty($body)) {
       $body = '';
-    } else {
+    } else if (is_array($body)) {
       $body = json_encode($body);
     }
 
@@ -97,6 +102,11 @@ class OdeoApi {
       'X-Odeo-Timestamp' => $timestamp,
       'X-Odeo-Signature' => $signature
     ];
+  }
+
+  public function isValidSignature($signatureToCompare, $method, $path, $token, $timestamp, $body) {
+    $signature = $this->generateSignature($method, $path, $token, $timestamp, $body);
+    return $signatureToCompare == $signature;
   }
 
 }
