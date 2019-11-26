@@ -1,0 +1,24 @@
+{
+    "name": "febrianjiuwira/odeo-php-sdk",
+    "description": "An easy to use Odeo PHP API using Guzzle library.",
+    "type": "library",
+    "require": {
+        "guzzlehttp/guzzle": "^6.5@dev"
+    },
+    "require-dev": {
+        "guzzlehttp/guzzle": "^6.5@dev"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Febrian Jiuwira",
+            "email": "febrian.jiuwira@gmail.com"
+        }
+    ],
+    "minimum-stability": "dev",
+    "autoload": {
+        "psr-4": {
+            "OdeoApi\\": "src"
+        }
+    }
+}
