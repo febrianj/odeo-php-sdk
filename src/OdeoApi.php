@@ -106,6 +106,7 @@ class OdeoApi {
 
   public function isValidSignature($signatureToCompare, $method, $path, $token, $timestamp, $body) {
     $signature = $this->generateSignature($method, $path, $token, $timestamp, $body);
+
     return $signatureToCompare == $signature;
   }
 

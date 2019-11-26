@@ -6,11 +6,11 @@ use OdeoApi\OdeoApi;
 
 class Disbursement extends OdeoApi {
 
-  function __construct($clientId, $clientSecret, $signingKey, $environment = 'production') {
+  public function __construct($clientId, $clientSecret, $signingKey, $environment = 'production') {
     parent::__construct($clientId, $clientSecret, $signingKey, $environment);
   }
 
-  function bankAccountInquiry($token, $accountNo, $bankId, $customerName, $withValidation = false) {
+  public function bankAccountInquiry($token, $accountNo, $bankId, $customerName, $withValidation = false) {
     return $this->createRequest('POST', '/dg/v1/bank-account-inquiry', $token, [
       'account_number' => $accountNo,
       'bank_id' => $bankId,
@@ -19,11 +19,11 @@ class Disbursement extends OdeoApi {
     ]);
   }
 
-  function bankList($token) {
+  public function bankList($token) {
     return $this->createRequest('GET', '/dg/v1/banks', $token);
   }
 
-  function executeDisbursement($token, $accountNo, $amount, $bankId, $customerName, $description, $referenceId) {
+  public function executeDisbursement($token, $accountNo, $amount, $bankId, $customerName, $description, $referenceId) {
     return $this->createRequest('POST', '/dg/v1/disbursements', $token, [
       'account_number' => $accountNo,
       'amount' => $amount,
@@ -34,15 +34,15 @@ class Disbursement extends OdeoApi {
     ]);
   }
 
-  function checkDisbursementByReferenceId($token, $referenceId) {
+  public function checkDisbursementByReferenceId($token, $referenceId) {
     return $this->createRequest('GET', '​/dg​/v1​/disbursements​/reference-id​/' . $referenceId, $token);
   }
 
-  function checkDisbursementByDisbursementId($token, $disbursementId) {
+  public function checkDisbursementByDisbursementId($token, $disbursementId) {
     return $this->createRequest('GET', '/dg/v1/disbursements/' . $disbursementId, $token);
   }
 
-  function checkBalance($token) {
+  public function checkBalance($token) {
     return $this->createRequest('GET', '/cash/me/balance', $token);
   }
 
