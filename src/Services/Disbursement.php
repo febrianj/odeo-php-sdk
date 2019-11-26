@@ -6,8 +6,8 @@ use OdeoApi\OdeoApi;
 
 class Disbursement extends OdeoApi {
 
-  function __construct($clientId, $clientClientSecret, $signingKey, $environment = 'production') {
-    parent::__construct('', '', '', $environment);
+  function __construct($clientId, $clientSecret, $signingKey, $environment = 'production') {
+    parent::__construct($clientId, $clientSecret, $signingKey, $environment);
   }
 
   function bankAccountInquiry($token, $accountNo, $bankId, $customerName, $withValidation = false) {

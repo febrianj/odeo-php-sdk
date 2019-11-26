@@ -51,11 +51,13 @@ class OdeoApi {
   }
 
   public function requestToken($scope = '') {
-    $response = $this->client->get('/oauth2/token', [
-      'client_id' => $this->clientId,
-      'client_secret' => $this->clientSecret,
-      'grant_type' => 'client_credentials',
-      'scope' => $scope
+    $response = $this->client->request('POST', '/oauth2/token', [
+      'json' => [
+        'client_id' => $this->clientId,
+        'client_secret' => $this->clientSecret,
+        'grant_type' => 'client_credentials',
+        'scope' => $scope
+      ]
     ]);
 
     return $response->getBody()->getContents();
@@ -64,7 +66,7 @@ class OdeoApi {
   public function createRequest($method, $path, $token, $body = []) {
     $response = $this->client->request($method, $path, [
       'headers' => $this->createHeaders($method, $path, $token, $body),
-      'body' => $body
+      'json' => $body
     ]);
 
     return $response->getBody()->getContents();
