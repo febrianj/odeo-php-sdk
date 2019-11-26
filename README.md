@@ -60,7 +60,8 @@ $isValid = $odeo->isValidSignature($signatureToCompare, $method, $path, $timesta
 ### OdeoApi\Services\Disbursement
 `Disbursement` class extends `OdeoApi` class and simplify clients request for calling Disbursement API services. You'll be able to use some of `OdeoApi` method such as `requestToken` to ease your development.
 ```php
-$disbursement = new Disbursement('clientId', 'clientSecret', 'signingKey', 'production');
+$disbursement = new Disbursement('production');
+$disbursement->setCredentials($clientId, $clientSecret, $signingKey);
 
 // request /dg/v1/bank-account-inquiry API
 $disbursement->bankAccountInquiry($accountNo, $bankId, $customerName, $withValidation);
@@ -85,7 +86,8 @@ $disbursement->checkBalance();
 Same as `Disbursement` class, `PaymentGateway` class also extends `OdeoApi` class.
  
 ```php
-$paymentGateway = new PaymentGateway('clientId', 'clientSecret', 'signingKey', 'production');
+$paymentGateway = new PaymentGateway('production');
+$paymentGateway->setCredentials($clientId, $clientSecret, $signingKey);
 
 // request /pg/v1/payment/reference-id/{reference_id} API
 $paymentGateway->checkPaymentByReferenceId($referenceId);
