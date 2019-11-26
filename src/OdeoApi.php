@@ -64,10 +64,11 @@ class OdeoApi {
   }
 
   public function createRequest($method, $path, $token, $body = []) {
-    $response = $this->client->request($method, $path, [
-      'headers' => $this->createHeaders($method, $path, $token, $body),
-      'json' => $body
-    ]);
+    if ($method == 'POST') {
+      $options['json'] = $body;
+    }
+    $options['headers'] = $this->createHeaders($method, $path, $token, $body);
+    $response = $this->client->request($method, $path, $options);
 
     return $response->getBody()->getContents();
   }
