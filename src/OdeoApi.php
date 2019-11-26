@@ -11,16 +11,18 @@ class OdeoApi {
   protected $clientSecret;
   protected $signingKey;
   protected $baseUrl;
+  protected $token;
+  protected $accessToken;
 
   /**
    * @var Client
    */
   protected $client;
 
-  public function __construct($clientId, $clientSecret, $signingKey, $environment = 'production') {
-    $this->clientId = $clientId;
-    $this->clientSecret = $clientSecret;
-    $this->signingKey = $signingKey;
+  public function __construct($environment = 'production') {
+    $this->clientId = '';
+    $this->clientSecret = '';
+    $this->signingKey = '';
 
     switch ($environment) {
       case 'production':
@@ -33,22 +35,26 @@ class OdeoApi {
         $this->staging();
         break;
     }
+  }
 
-    $this->newClient();
+  public function setCredentials($clientId, $clientSecret, $signingKey) {
+    $this->clientId = $clientId;
+    $this->clientSecret = $clientSecret;
+    $this->signingKey = $signingKey;
+  }
+
+  public function setAccessToken($accessToken) {
+    $this->accessToken = $accessToken;
   }
 
   public function production() {
     $this->baseUrl = 'https://api.v2.odeo.co.id/';
+    $this->newClient();
   }
 
   public function staging() {
     $this->baseUrl = 'http://api.v2.staging.odeo.co.id/';
-  }
-
-  protected function newClient() {
-    $this->client = new Client([
-      'base_uri' => $this->baseUrl
-    ]);
+    $this->newClient();
   }
 
   public function requestToken($scope = '') {
@@ -60,15 +66,18 @@ class OdeoApi {
         'scope' => $scope
       ]
     ]);
-
-    return $response->getBody()->getContents();
+    $result = $response->getBody()->getContents();
+    $accessToken = json_decode($result)->access_token;
+    $this->setAccessToken($accessToken);
+    return $result;
   }
 
-  public function createRequest($method, $path, $token, $body = []) {
+  public function createRequest($method, $path, $body = []) {
     if ($method == 'POST') {
       $options['json'] = $body;
     }
-    $options['headers'] = $this->createHeaders($method, $path, $token, $body);
+    $options['headers'] = $this->createHeaders($method, $path, $body);
+    $options['timeout'] = 60;
 
     try {
       $response = $this->client->request($method, $path, $options);
@@ -78,7 +87,19 @@ class OdeoApi {
     }
   }
 
-  protected function generateSignature($method, $path, $accessToken, $timestamp, $body) {
+  public function isValidSignature($signatureToCompare, $method, $path, $timestamp, $body, $accessToken = '') {
+    $signature = $this->generateSignature($method, $path, $timestamp, $body, $accessToken);
+
+    return $signatureToCompare == $signature;
+  }
+
+  protected function newClient() {
+    $this->client = new Client([
+      'base_uri' => $this->baseUrl
+    ]);
+  }
+
+  protected function generateSignature($method, $path, $timestamp, $body, $accessToken) {
     if (empty($body)) {
       $body = '';
     } else if (is_array($body)) {
@@ -93,21 +114,15 @@ class OdeoApi {
     return $signature;
   }
 
-  protected function createHeaders($method, $path, $token, $body) {
+  protected function createHeaders($method, $path, $body) {
     $timestamp = time();
-    $signature = $this->generateSignature($method, $path, $token, $timestamp, $body);
+    $signature = $this->generateSignature($method, $path, $timestamp, $body, $this->accessToken);
 
     return [
-      'Authorization' => 'Bearer ' . $token,
+      'Authorization' => 'Bearer ' . $this->token,
       'X-Odeo-Timestamp' => $timestamp,
       'X-Odeo-Signature' => $signature
     ];
-  }
-
-  public function isValidSignature($signatureToCompare, $method, $path, $token, $timestamp, $body) {
-    $signature = $this->generateSignature($method, $path, $token, $timestamp, $body);
-
-    return $signatureToCompare == $signature;
   }
 
 }

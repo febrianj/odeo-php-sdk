@@ -6,12 +6,12 @@ use OdeoApi\OdeoApi;
 
 class Disbursement extends OdeoApi {
 
-  public function __construct($clientId, $clientSecret, $signingKey, $environment = 'production') {
-    parent::__construct($clientId, $clientSecret, $signingKey, $environment);
+  public function __construct($environment = 'production') {
+    parent::__construct($environment);
   }
 
-  public function bankAccountInquiry($token, $accountNo, $bankId, $customerName, $withValidation = false) {
-    return $this->createRequest('POST', '/dg/v1/bank-account-inquiry', $token, [
+  public function bankAccountInquiry($accountNo, $bankId, $customerName, $withValidation = false) {
+    return $this->createRequest('POST', '/dg/v1/bank-account-inquiry', [
       'account_number' => $accountNo,
       'bank_id' => $bankId,
       'customer_name' => $customerName,
@@ -19,12 +19,12 @@ class Disbursement extends OdeoApi {
     ]);
   }
 
-  public function bankList($token) {
-    return $this->createRequest('GET', '/dg/v1/banks', $token);
+  public function bankList() {
+    return $this->createRequest('GET', '/dg/v1/banks');
   }
 
-  public function executeDisbursement($token, $accountNo, $amount, $bankId, $customerName, $description, $referenceId) {
-    return $this->createRequest('POST', '/dg/v1/disbursements', $token, [
+  public function executeDisbursement($accountNo, $amount, $bankId, $customerName, $description, $referenceId) {
+    return $this->createRequest('POST', '/dg/v1/disbursements', [
       'account_number' => $accountNo,
       'amount' => $amount,
       'bank_id' => $bankId,
@@ -34,16 +34,16 @@ class Disbursement extends OdeoApi {
     ]);
   }
 
-  public function checkDisbursementByReferenceId($token, $referenceId) {
-    return $this->createRequest('GET', '​/dg​/v1​/disbursements​/reference-id​/' . $referenceId, $token);
+  public function checkDisbursementByReferenceId($referenceId) {
+    return $this->createRequest('GET', '​/dg​/v1​/disbursements​/reference-id​/' . $referenceId);
   }
 
-  public function checkDisbursementByDisbursementId($token, $disbursementId) {
-    return $this->createRequest('GET', '/dg/v1/disbursements/' . $disbursementId, $token);
+  public function checkDisbursementByDisbursementId($disbursementId) {
+    return $this->createRequest('GET', '/dg/v1/disbursements/' . $disbursementId);
   }
 
-  public function checkBalance($token) {
-    return $this->createRequest('GET', '/cash/me/balance', $token);
+  public function checkBalance() {
+    return $this->createRequest('GET', '/cash/me/balance');
   }
 
 }

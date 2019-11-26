@@ -25,14 +25,18 @@ $disbursement = new Disbursement('clientId', 'clientSecret', 'signingKey', 'stag
 ```
 4. Use one of the class method to query the API - this example will request the bank list:
 ```php
-$disbursement->bankList($token);
+$disbursement->bankList();
 ```
 
 ## Usage
 ### OdeoApi\OdeoApi
 `OdeoApi` class provides the functions that is needed to configure your API calls and signature generation.
 ```php
-$odeo = new OdeoApi('clientId', 'clientSecret', 'signingKey', 'production'); // initialize OdeoApi class
+// initialize OdeoApi class
+$odeo = new OdeoApi('production');
+
+// set API credentials
+$odeo->setCredentials($clientId, $clientSecret, $signingKey);
 
 // set API call to odeo production environment
 $odeo->production();
@@ -40,14 +44,17 @@ $odeo->production();
 // set API call to odeo staging/development environment
 $odeo->staging();
 
-// request API access token
-$token = json_decode($odeo->requestToken())->access_token;
+// set access token that will be used to create API calls
+$odeo->setAccessToken($accessToken);
+
+// request API access token, this also calls setAccessToken as shown above
+$accessToken = json_decode($odeo->requestToken())->access_token;
 
 // request Disbursements Bank List API using createRequest
-$odeo->createRequest('GET', '/dg/v1/banks', $token);
+$odeo->createRequest('GET', '/dg/v1/banks');
 
 // comparing signature from your callbacks
-$isValid = $odeo->isValidSignature($signatureToCompare, $method, $path, $token, $timestamp, $body);
+$isValid = $odeo->isValidSignature($signatureToCompare, $method, $path, $timestamp, $body, $token);
 ```
 
 ### OdeoApi\Services\Disbursement
@@ -56,22 +63,22 @@ $isValid = $odeo->isValidSignature($signatureToCompare, $method, $path, $token, 
 $disbursement = new Disbursement('clientId', 'clientSecret', 'signingKey', 'production');
 
 // request /dg/v1/bank-account-inquiry API
-$disbursement->bankAccountInquiry($token, $accountNo, $bankId, $customerName, $withValidation = false);
+$disbursement->bankAccountInquiry($accountNo, $bankId, $customerName, $withValidation);
 
 // request /dg/v1/banks API
-$disbursement->bankList($token);
+$disbursement->bankList();
 
 // request ​/dg​/v1​/disbursements API
-$disbursement->executeDisbursement($token, $accountNo, $amount, $bankId, $customerName, $description, $referenceId);
+$disbursement->executeDisbursement($accountNo, $amount, $bankId, $customerName, $description, $referenceId);
 
 // request /dg/v1/disbursements/reference-id/{reference_id} API
-$disbursement->checkDisbursementByReferenceId($token, $referenceId);
+$disbursement->checkDisbursementByReferenceId($referenceId);
 
 // request /dg/v1/disbursements/{disbursement_id} API
-$disbursement->checkDisbursementByDisbursementId($token, $disbursementId);
+$disbursement->checkDisbursementByDisbursementId($disbursementId);
 
 // request /cash/me/balance API
-$disbursement->checkBalance($token);
+$disbursement->checkBalance();
 ```
 
 ### OdeoApi\Services\PaymentGateway
@@ -81,8 +88,8 @@ Same as `Disbursement` class, `PaymentGateway` class also extends `OdeoApi` clas
 $paymentGateway = new PaymentGateway('clientId', 'clientSecret', 'signingKey', 'production');
 
 // request /pg/v1/payment/reference-id/{reference_id} API
-$paymentGateway->checkPaymentByReferenceId($token, $referenceId);
+$paymentGateway->checkPaymentByReferenceId($referenceId);
 
 // request /pg/v1/payment/{payment_id} API
-checkPaymentByPaymentId($token, $paymentId);
+$paymentGateway->checkPaymentByPaymentId($paymentId);
 ```
