@@ -108,4 +108,4 @@ $paymentGateway->checkPaymentByPaymentId($paymentId);
 ```
 
 ### Examples
-See `OdeoApi\Examples`. 
+See `examples`. 
