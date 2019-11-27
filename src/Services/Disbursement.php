@@ -23,7 +23,7 @@ class Disbursement extends OdeoApi {
     return $this->createRequest('GET', '/dg/v1/banks');
   }
 
-  public function executeDisbursement($accountNo, $amount, $bankId, $customerName, $description, $referenceId) {
+  public function executeDisbursement($accountNo, $amount, $bankId, $customerName, $referenceId, $description = '') {
     return $this->createRequest('POST', '/dg/v1/disbursements', [
       'account_number' => $accountNo,
       'amount' => $amount,

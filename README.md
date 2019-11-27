@@ -25,7 +25,12 @@ $disbursement = new Disbursement('staging');
 ```
 4. Use one of the class method to query the API - this example will request the bank list:
 ```php
-$disbursement->bankList();
+$banks = $disbursement->bankList();
+```
+Tips: all of the API response has been formatted into associative array.
+```php
+// extracting bank id
+$bankId = $banks['banks'][0]['bank_id'];
 ```
 
 ## Usage
@@ -44,17 +49,23 @@ $odeo->production();
 // set API call to odeo staging/development environment
 $odeo->staging();
 
+// request API access token, this also calls setAccessToken
+// you should store the access token in your system and refresh when it expires
+$accessToken = $odeo->refreshAccessToken()['access_token'];
+
 // set access token that will be used to create API calls
 $odeo->setAccessToken($accessToken);
-
-// request API access token, this also calls setAccessToken as shown above
-$accessToken = json_decode($odeo->requestToken())->access_token;
 
 // request Disbursements Bank List API using createRequest
 $odeo->createRequest('GET', '/dg/v1/banks');
 
-// comparing signature from your callbacks
-$isValid = $odeo->isValidSignature($signatureToCompare, $method, $path, $timestamp, $body, $token);
+// comparing and proccessing signature from your callbacks
+$isValid = $odeo->isValidSignature($signatureToCompare, $method, $path, $timestamp, $body);
+if ($isValid) {
+  // ... code when signature is valid
+} else {
+  // ... code when signature is not valid
+}
 ```
 
 ### OdeoApi\Services\Disbursement
@@ -70,7 +81,7 @@ $disbursement->bankAccountInquiry($accountNo, $bankId, $customerName, $withValid
 $disbursement->bankList();
 
 // request ​/dg​/v1​/disbursements API
-$disbursement->executeDisbursement($accountNo, $amount, $bankId, $customerName, $description, $referenceId);
+$disbursement->executeDisbursement($accountNo, $amount, $bankId, $customerName, $referenceId, $description);
 
 // request /dg/v1/disbursements/reference-id/{reference_id} API
 $disbursement->checkDisbursementByReferenceId($referenceId);
@@ -95,3 +106,6 @@ $paymentGateway->checkPaymentByReferenceId($referenceId);
 // request /pg/v1/payment/{payment_id} API
 $paymentGateway->checkPaymentByPaymentId($paymentId);
 ```
+
+### Examples
+See `OdeoApi\Examples`. 

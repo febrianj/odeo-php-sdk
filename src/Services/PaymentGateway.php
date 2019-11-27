@@ -1,10 +1,4 @@
 <?php
-/**
- * Created by PhpStorm.
- * User: febrianjiuwira
- * Date: 26/11/19
- * Time: 11.01
- */
 
 namespace OdeoApi\Services;
 

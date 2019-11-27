@@ -3,7 +3,6 @@
 namespace OdeoApi;
 
 use GuzzleHttp\Client;
-use GuzzleHttp\Exception\ClientException;
 
 class OdeoApi {
 
@@ -11,7 +10,6 @@ class OdeoApi {
   protected $clientSecret;
   protected $signingKey;
   protected $baseUrl;
-  protected $token;
   protected $accessToken;
 
   /**
@@ -57,7 +55,7 @@ class OdeoApi {
     $this->newClient();
   }
 
-  public function requestToken($scope = '') {
+  public function refreshAccessToken($scope = '') {
     $response = $this->client->request('POST', '/oauth2/token', [
       'json' => [
         'client_id' => $this->clientId,
@@ -66,9 +64,10 @@ class OdeoApi {
         'scope' => $scope
       ]
     ]);
-    $result = $response->getBody()->getContents();
-    $accessToken = json_decode($result)->access_token;
+    $result = json_decode($response->getBody()->getContents(), true);
+    $accessToken = $result['access_token'];
     $this->setAccessToken($accessToken);
+
     return $result;
   }
 
@@ -78,25 +77,15 @@ class OdeoApi {
     }
     $options['headers'] = $this->createHeaders($method, $path, $body);
     $options['timeout'] = 60;
+    $response = $this->client->request($method, $path, $options);
 
-    try {
-      $response = $this->client->request($method, $path, $options);
-      return $response->getBody()->getContents();
-    } catch (ClientException $e) {
-      return $e->getResponse()->getBody()->getContents();
-    }
+    return json_decode($response->getBody()->getContents(), true);
   }
 
   public function isValidSignature($signatureToCompare, $method, $path, $timestamp, $body, $accessToken = '') {
     $signature = $this->generateSignature($method, $path, $timestamp, $body, $accessToken);
 
     return $signatureToCompare == $signature;
-  }
-
-  protected function newClient() {
-    $this->client = new Client([
-      'base_uri' => $this->baseUrl
-    ]);
   }
 
   protected function generateSignature($method, $path, $timestamp, $body, $accessToken) {
@@ -119,10 +108,16 @@ class OdeoApi {
     $signature = $this->generateSignature($method, $path, $timestamp, $body, $this->accessToken);
 
     return [
-      'Authorization' => 'Bearer ' . $this->token,
+      'Authorization' => 'Bearer ' . $this->accessToken,
       'X-Odeo-Timestamp' => $timestamp,
       'X-Odeo-Signature' => $signature
     ];
+  }
+
+  protected function newClient() {
+    $this->client = new Client([
+      'base_uri' => $this->baseUrl
+    ]);
   }
 
 }
