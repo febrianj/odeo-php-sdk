@@ -7,7 +7,7 @@ use OdeoApi\Services\Disbursement;
 
 // initialize Disbursement, use 'staging' || 'production' as the environment
 // choose the environment config based on development stage
-$disbursement = new Disbursement('staging');
+$disbursement = new Disbursement();
 
 // set the environment config with these:
 $disbursement->production(); // set base url to https://api.v2.odeo.co.id/

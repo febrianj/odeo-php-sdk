@@ -7,7 +7,7 @@ use OdeoApi\Services\PaymentGateway;
 
 // initialize PaymentGateway, use 'staging' || 'production' as the environment
 // choose the environment config based on development stage
-$pg = new PaymentGateway('staging');
+$pg = new PaymentGateway();
 
 // set the environment config with these:
 $pg->production(); // set base url to https://api.v2.odeo.co.id/

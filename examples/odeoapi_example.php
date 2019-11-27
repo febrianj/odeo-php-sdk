@@ -6,7 +6,7 @@ use OdeoApi\OdeoApi;
 
 // initialize OdeoApi, use 'staging' || 'production' as the environment
 // choose the environment config based on your development stage
-$odeoApi = new OdeoApi('staging');
+$odeoApi = new OdeoApi();
 
 // set the environment config with these:
 $odeoApi->production(); // set base url to https://api.v2.odeo.co.id/

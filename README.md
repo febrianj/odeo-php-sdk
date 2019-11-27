@@ -19,9 +19,9 @@ Just install the package to your PHP Project and you're ready to go!
  ```php
 use OdeoApi\Services\Disbursement;
 ```
-3. Create a new instance of the class (`Disbursement`) with the your API credentials:
+3. Create a new instance of the class (`Disbursement`) with your API credentials:
 ```php
-$disbursement = new Disbursement('staging');
+$disbursement = new Disbursement();
 ```
 4. Use one of the class method to query the API - this example will request the bank list:
 ```php
@@ -38,7 +38,7 @@ $bankId = $banks['banks'][0]['bank_id'];
 `OdeoApi` class provides the functions that is needed to configure your API calls and signature generation.
 ```php
 // initialize OdeoApi class
-$odeo = new OdeoApi('production');
+$odeo = new OdeoApi();
 
 // set API credentials
 $odeo->setCredentials($clientId, $clientSecret, $signingKey);
@@ -71,7 +71,8 @@ if ($isValid) {
 ### OdeoApi\Services\Disbursement
 `Disbursement` class extends `OdeoApi` class and simplify clients request for calling Disbursement API services. You'll be able to use some of `OdeoApi` method such as `requestToken` to ease your development.
 ```php
-$disbursement = new Disbursement('production');
+$disbursement = new Disbursement();
+$disbursement->staging();
 $disbursement->setCredentials($clientId, $clientSecret, $signingKey);
 
 // request /dg/v1/bank-account-inquiry API
@@ -97,7 +98,8 @@ $disbursement->checkBalance();
 Same as `Disbursement` class, `PaymentGateway` class also extends `OdeoApi` class.
  
 ```php
-$paymentGateway = new PaymentGateway('production');
+$paymentGateway = new PaymentGateway();
+$paymentGateway->staging();
 $paymentGateway->setCredentials($clientId, $clientSecret, $signingKey);
 
 // request /pg/v1/payment/reference-id/{reference_id} API
