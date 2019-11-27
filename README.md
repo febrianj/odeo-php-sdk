@@ -21,7 +21,7 @@ use OdeoApi\Services\Disbursement;
 ```
 3. Create a new instance of the class (`Disbursement`) with the your API credentials:
 ```php
-$disbursement = new Disbursement('clientId', 'clientSecret', 'signingKey', 'staging');
+$disbursement = new Disbursement('staging');
 ```
 4. Use one of the class method to query the API - this example will request the bank list:
 ```php
