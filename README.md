@@ -19,11 +19,24 @@ Just install the package to your PHP Project and you're ready to go!
  ```php
 use OdeoApi\Services\Disbursement;
 ```
-3. Create a new instance of the class (`Disbursement`) with your API credentials:
+3. Create a new instance of the class (`Disbursement`):
 ```php
 $disbursement = new Disbursement();
 ```
-4. Use one of the class method to query the API - this example will request the bank list:
+4. Set environment:
+```php
+$disbursement->production();
+```
+5. Set Api Credentials:
+```php
+$disbursement->setCredentials($clientId, $clientSecret, $signingKey);
+```
+6. Refresh/set `accessToken`:
+```php
+$accessToken = $disbursement->refreshAccessToken()['access_token'];
+$disbursement->setAccessToken($accessToken);
+```
+7. Use one of the class method to query the API - this example will request the bank list:
 ```php
 $banks = $disbursement->bankList();
 ```
