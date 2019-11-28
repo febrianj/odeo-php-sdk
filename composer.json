@@ -1,5 +1,5 @@
 {
-    "name": "febrianjiuwira/odeo-php-sdk",
+    "name": "odeoteknologi/odeo-php-sdk",
     "description": "An easy to use Odeo PHP API using Guzzle library.",
     "type": "library",
     "require": {

@@ -14,7 +14,7 @@ Just install the package to your PHP Project and you're ready to go!
 
 ## Development
 ### Quick Start Guide
-1. Install the package with Composer: `composer require febrianjiuwira/odeo-php-sdk` 
+1. Install the package with Composer: `composer require odeoteknologi/odeo-php-sdk` 
 2. Use the service you need in your application class - I.e. you are using the Disbursement service (*assuming you're using PSR-4*):
  ```php
 use OdeoApi\Services\Disbursement;
