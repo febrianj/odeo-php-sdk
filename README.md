@@ -1,9 +1,9 @@
 # odeo-php-sdk
 
-[![Latest Stable Version](https://poser.pugx.org/febrianjiuwira/odeo-php-sdk/v/stable)](https://packagist.org/packages/febrianjiuwira/odeo-php-sdk)
-[![Total Downloads](https://poser.pugx.org/febrianjiuwira/odeo-php-sdk/downloads)](https://packagist.org/packages/febrianjiuwira/odeo-php-sdk)
-[![Latest Unstable Version](https://poser.pugx.org/febrianjiuwira/odeo-php-sdk/v/unstable)](https://packagist.org/packages/febrianjiuwira/odeo-php-sdk)
-[![License](https://poser.pugx.org/febrianjiuwira/odeo-php-sdk/license)](https://packagist.org/packages/febrianjiuwira/odeo-php-sdk)
+[![Latest Stable Version](https://poser.pugx.org/odeoteknologi/odeo-php-sdk/v/stable)](https://packagist.org/packages/odeoteknologi/odeo-php-sdk)
+[![Total Downloads](https://poser.pugx.org/odeoteknologi/odeo-php-sdk/downloads)](https://packagist.org/packages/odeoteknologi/odeo-php-sdk)
+[![License](https://poser.pugx.org/odeoteknologi/odeo-php-sdk/license)](https://packagist.org/packages/odeoteknologi/odeo-php-sdk)
+[![composer.lock](https://poser.pugx.org/odeoteknologi/odeo-php-sdk/composerlock)](https://packagist.org/packages/odeoteknologi/odeo-php-sdk)
 
 PHP library for calling https://api.v2.odeo.co.id/ API using GuzzleHttp.
 
