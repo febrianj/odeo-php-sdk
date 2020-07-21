@@ -35,7 +35,7 @@ class Disbursement extends OdeoApi {
   }
 
   public function checkDisbursementByReferenceId($referenceId) {
-    return $this->createRequest('GET', '​/dg/v1/disbursements/reference-id/' . $referenceId);
+    return $this->createRequest('GET', '/dg/v1/disbursements/reference-id/' . $referenceId);
   }
 
   public function checkDisbursementByDisbursementId($disbursementId) {
