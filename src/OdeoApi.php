@@ -51,7 +51,7 @@ class OdeoApi {
   }
 
   public function staging() {
-    $this->baseUrl = 'http://odeo-core-api.dev.odeo.co.id/';
+    $this->baseUrl = 'https://odeo-core-api.dev.odeo.co.id/';
     $this->newClient();
   }
 
