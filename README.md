@@ -5,7 +5,7 @@
 [![License](https://poser.pugx.org/odeoteknologi/odeo-php-sdk/license)](https://packagist.org/packages/odeoteknologi/odeo-php-sdk)
 [![composer.lock](https://poser.pugx.org/odeoteknologi/odeo-php-sdk/composerlock)](https://packagist.org/packages/odeoteknologi/odeo-php-sdk)
 
-PHP library for calling https://api.v2.odeo.co.id/ API using GuzzleHttp.
+PHP library for calling Odeo Teknologi Indonesia API using GuzzleHttp.
 
 Just install the package to your PHP Project and you're ready to go!
 
@@ -23,9 +23,9 @@ use OdeoApi\Services\Disbursement;
 ```php
 $disbursement = new Disbursement();
 ```
-4. Set environment:
+4. Set Api Base Url:
 ```php
-$disbursement->production();
+$disbursement->setBaseUrl($apiBaseUrl);
 ```
 5. Set Api Credentials:
 ```php
@@ -53,14 +53,11 @@ $bankId = $banks['banks'][0]['bank_id'];
 // initialize OdeoApi class
 $odeo = new OdeoApi();
 
+// set API base url
+$odeo->setBaseUrl($apiBaseUrl);
+
 // set API credentials
 $odeo->setCredentials($clientId, $clientSecret, $signingKey);
-
-// set API call to odeo production environment
-$odeo->production();
-
-// set API call to odeo staging/development environment
-$odeo->staging();
 
 // request API access token, this also calls setAccessToken
 // you should store the access token in your system and refresh when it expires
@@ -85,7 +82,7 @@ if ($isValid) {
 `Disbursement` class extends `OdeoApi` class and simplify clients request for calling Disbursement API services. You'll be able to use some of `OdeoApi` method such as `requestToken` to ease your development.
 ```php
 $disbursement = new Disbursement();
-$disbursement->staging();
+$disbursement->setBaseUrl($apiBaseUrl);
 $disbursement->setCredentials($clientId, $clientSecret, $signingKey);
 
 // request /dg/v1/bank-account-inquiry API
@@ -112,7 +109,6 @@ Same as `Disbursement` class, `PaymentGateway` class also extends `OdeoApi` clas
  
 ```php
 $paymentGateway = new PaymentGateway();
-$paymentGateway->staging();
 $paymentGateway->setCredentials($clientId, $clientSecret, $signingKey);
 
 // request /pg/v1/payment/reference-id/{reference_id} API

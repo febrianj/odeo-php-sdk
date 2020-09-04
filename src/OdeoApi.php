@@ -9,7 +9,6 @@ class OdeoApi {
   protected $clientId;
   protected $clientSecret;
   protected $signingKey;
-  protected $baseUrl;
   protected $accessToken;
 
   /**
@@ -17,22 +16,10 @@ class OdeoApi {
    */
   protected $client;
 
-  public function __construct($environment = 'production') {
+  public function __construct() {
     $this->clientId = '';
     $this->clientSecret = '';
     $this->signingKey = '';
-
-    switch ($environment) {
-      case 'production':
-        $this->production();
-        break;
-      case 'staging':
-        $this->staging();
-        break;
-      default:
-        $this->staging();
-        break;
-    }
   }
 
   public function setCredentials($clientId, $clientSecret, $signingKey) {
@@ -43,16 +30,6 @@ class OdeoApi {
 
   public function setAccessToken($accessToken) {
     $this->accessToken = $accessToken;
-  }
-
-  public function production() {
-    $this->baseUrl = 'https://api.v2.odeo.co.id/';
-    $this->newClient();
-  }
-
-  public function staging() {
-    $this->baseUrl = 'https://odeo-core-api.dev.odeo.co.id/';
-    $this->newClient();
   }
 
   public function refreshAccessToken($scope = '') {
@@ -114,9 +91,9 @@ class OdeoApi {
     ];
   }
 
-  protected function newClient() {
+  public function setBaseUrl($url) {
     $this->client = new Client([
-      'base_uri' => $this->baseUrl
+      'base_uri' => $url
     ]);
   }
 

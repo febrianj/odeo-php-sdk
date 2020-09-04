@@ -6,8 +6,8 @@ use OdeoApi\OdeoApi;
 
 class PaymentGateway extends OdeoApi {
 
-  public function __construct($environment = 'production') {
-    parent::__construct($environment);
+  public function __construct() {
+    parent::__construct();
   }
 
   public function checkPaymentByReferenceId($referenceId) {
