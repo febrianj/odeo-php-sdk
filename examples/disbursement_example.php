@@ -9,9 +9,8 @@ use OdeoApi\Services\Disbursement;
 // choose the environment config based on development stage
 $disbursement = new Disbursement();
 
-// set the environment config with these:
-$disbursement->production(); // set base url to https://api.v2.odeo.co.id/
-$disbursement->staging(); // set base url to http://api.v2.staging.odeo.co.id/
+// set API base url
+$disbursement->setBaseUrl('odeo-api-url');
 
 // set API credentials
 $disbursement->setCredentials('clientId', 'secret', 'signingKey');

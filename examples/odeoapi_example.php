@@ -8,9 +8,8 @@ use OdeoApi\OdeoApi;
 // choose the environment config based on your development stage
 $odeoApi = new OdeoApi();
 
-// set the environment config with these:
-$odeoApi->production(); // set base url to https://api.v2.odeo.co.id/
-$odeoApi->staging(); // set base url to http://api.v2.staging.odeo.co.id/
+// set API base url
+$disbursement->setBaseUrl('odeo-api-url');
 
 // set API credentials
 $odeoApi->setCredentials('clientId', 'secret', 'signingKey');

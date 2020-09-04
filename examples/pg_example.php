@@ -9,9 +9,8 @@ use OdeoApi\Services\PaymentGateway;
 // choose the environment config based on development stage
 $pg = new PaymentGateway();
 
-// set the environment config with these:
-$pg->production(); // set base url to https://api.v2.odeo.co.id/
-$pg->staging(); // set base url to http://api.v2.staging.odeo.co.id/
+// set API base url
+$disbursement->setBaseUrl('odeo-api-url');
 
 // set your API credentials
 $pg->setCredentials('clientId', 'secret', 'signingKey');
