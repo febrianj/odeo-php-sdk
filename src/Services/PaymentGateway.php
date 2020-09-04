@@ -11,7 +11,7 @@ class PaymentGateway extends OdeoApi {
   }
 
   public function checkPaymentByReferenceId($referenceId) {
-    return $this->createRequest('GET', '​/pg​/v1​/payment​/reference-id​/' . $referenceId);
+    return $this->createRequest('GET', '/pg/v1/payment/reference-id/' . $referenceId);
   }
 
   public function checkPaymentByPaymentId($paymentId) {
