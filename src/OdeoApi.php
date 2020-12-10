@@ -4,97 +4,115 @@ namespace OdeoApi;
 
 use GuzzleHttp\Client;
 
-class OdeoApi {
+class OdeoApi
+{
+    protected $clientId;
+    protected $clientSecret;
+    protected $signingKey;
+    protected $accessToken;
 
-  protected $clientId;
-  protected $clientSecret;
-  protected $signingKey;
-  protected $accessToken;
+    /**
+     * @var Client
+     */
+    protected $client;
 
-  /**
-   * @var Client
-   */
-  protected $client;
-
-  public function __construct() {
-    $this->clientId = '';
-    $this->clientSecret = '';
-    $this->signingKey = '';
-  }
-
-  public function setCredentials($clientId, $clientSecret, $signingKey) {
-    $this->clientId = $clientId;
-    $this->clientSecret = $clientSecret;
-    $this->signingKey = $signingKey;
-  }
-
-  public function setAccessToken($accessToken) {
-    $this->accessToken = $accessToken;
-  }
-
-  public function refreshAccessToken($scope = '') {
-    $response = $this->client->request('POST', '/oauth2/token', [
-      'json' => [
-        'client_id' => $this->clientId,
-        'client_secret' => $this->clientSecret,
-        'grant_type' => 'client_credentials',
-        'scope' => $scope
-      ]
-    ]);
-    $result = json_decode($response->getBody()->getContents(), true);
-    $accessToken = $result['access_token'];
-    $this->setAccessToken($accessToken);
-
-    return $result;
-  }
-
-  public function createRequest($method, $path, $body = []) {
-    if ($method == 'POST') {
-      $options['json'] = $body;
-    }
-    $options['headers'] = $this->createHeaders($method, $path, $body);
-    $options['timeout'] = 60;
-    $response = $this->client->request($method, $path, $options);
-
-    return json_decode($response->getBody()->getContents(), true);
-  }
-
-  public function isValidSignature($signatureToCompare, $method, $path, $timestamp, $body, $accessToken = '') {
-    $signature = $this->generateSignature($method, $path, $timestamp, $body, $accessToken);
-
-    return $signatureToCompare == $signature;
-  }
-
-  protected function generateSignature($method, $path, $timestamp, $body, $accessToken) {
-    if (empty($body)) {
-      $body = '';
-    } else if (is_array($body)) {
-      $body = json_encode($body);
+    public function __construct()
+    {
+        $this->clientId = '';
+        $this->clientSecret = '';
+        $this->signingKey = '';
     }
 
-    $bodyHash = base64_encode(hash('sha256', $body, true));
-    $messages = [$method, $path, '', $accessToken, $timestamp, $bodyHash];
-    $stringToSign = implode(':', $messages);
-    $signature = base64_encode(hash_hmac('sha256', $stringToSign, $this->signingKey, true));
+    public function setCredentials($clientId, $clientSecret, $signingKey)
+    {
+        $this->clientId = $clientId;
+        $this->clientSecret = $clientSecret;
+        $this->signingKey = $signingKey;
+    }
 
-    return $signature;
-  }
+    public function setAccessToken($accessToken)
+    {
+        $this->accessToken = $accessToken;
+    }
 
-  protected function createHeaders($method, $path, $body) {
-    $timestamp = time();
-    $signature = $this->generateSignature($method, $path, $timestamp, $body, $this->accessToken);
+    public function refreshAccessToken($scope = '')
+    {
+        $data = [
+            'client_id' => $this->clientId,
+            'client_secret' => $this->clientSecret,
+            'grant_type' => 'client_credentials',
+        ];
 
-    return [
-      'Authorization' => 'Bearer ' . $this->accessToken,
-      'X-Odeo-Timestamp' => $timestamp,
-      'X-Odeo-Signature' => $signature
-    ];
-  }
+        if ($this->scopeExists($scope)) {
+            $data['scope'] = $scope;
+        }
 
-  public function setBaseUrl($url) {
-    $this->client = new Client([
-      'base_uri' => $url
-    ]);
-  }
+        $response = $this->client->request('POST', '/oauth2/token', [
+            'json' => $data,
+        ]);
+        $result = json_decode($response->getBody()->getContents(), true);
+        $accessToken = $result['access_token'];
+        $this->setAccessToken($accessToken);
 
+        return $result;
+    }
+
+    public function createRequest($method, $path, $body = [])
+    {
+        if ('POST' == $method) {
+            $options['json'] = $body;
+        }
+        $options['headers'] = $this->createHeaders($method, $path, $body);
+        $options['timeout'] = 60;
+        $response = $this->client->request($method, $path, $options);
+
+        return json_decode($response->getBody()->getContents(), true);
+    }
+
+    public function isValidSignature($signatureToCompare, $method, $path, $timestamp, $body, $accessToken = '')
+    {
+        $signature = $this->generateSignature($method, $path, $timestamp, $body, $accessToken);
+
+        return $signatureToCompare == $signature;
+    }
+
+    protected function generateSignature($method, $path, $timestamp, $body, $accessToken)
+    {
+        if (empty($body)) {
+            $body = '';
+        } elseif (is_array($body)) {
+            $body = json_encode($body);
+        }
+
+        $bodyHash = base64_encode(hash('sha256', $body, true));
+        $messages = [$method, $path, '', $accessToken, $timestamp, $bodyHash];
+        $stringToSign = implode(':', $messages);
+        $signature = base64_encode(hash_hmac('sha256', $stringToSign, $this->signingKey, true));
+
+        return $signature;
+    }
+
+    protected function createHeaders($method, $path, $body)
+    {
+        $timestamp = time();
+        $signature = $this->generateSignature($method, $path, $timestamp, $body, $this->accessToken);
+
+        return [
+            'Authorization' => 'Bearer '.$this->accessToken,
+            'X-Odeo-Timestamp' => $timestamp,
+            'X-Odeo-Signature' => $signature,
+        ];
+    }
+
+    public function setBaseUrl($url)
+    {
+        $this->client = new Client([
+            'base_uri' => $url,
+        ]);
+    }
+
+    public function scopeExists($scope)
+    {
+        return !empty($scope);
+    }
 }
